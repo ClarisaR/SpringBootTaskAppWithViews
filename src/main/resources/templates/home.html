@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <th:block th:replace="blocks/bootstrap_headers :: bootstrap_headers"></th:block>
+    <title>Task Application</title>
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="text-center">
+        Welcome to My Application!
+    </h1>
+    <div class="d-flex flex-row justify-content-between gap-5">
+    <div class="bg-light shadow rounded pb-5 pt-4 px-3 flex-grow-1">
+        <form method="post" action="/tasks" th:object="${task}">
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" th:field="*{name}"/>
+                <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <input type="text" class="form-control" id="description" th:field="*{description}">
+                <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
+            </div>
+
+            <div class="mb-3">
+                <label class="d-block">Status</label>
+                <div class="btn-group">
+                    <input class="btn-check" type="radio" name="todo" id="todo" checked th:field="*{status}"
+                           th:value="TODO"/>
+                    <label class="btn btn-outline-primary" for="todo">
+                        TODO
+                    </label>
+
+                    <input class="btn-check" type="radio" name="doing" id="doing" th:field="*{status}"
+                           th:value="DOING"/>
+                    <label class="btn btn-outline-primary" for="doing">
+                        DOING
+                    </label>
+
+                    <input class="btn-check" type="radio" name="done" id="done" th:field="*{status}" th:value="DONE"/>
+                    <label class="btn btn-outline-primary" for="done">
+                        DONE
+                    </label>
+
+                    <p th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></p>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Create Task</button>
+        </form>
+    </div>
+
+    <div class="flex-grow-1">
+        <span class="d-block fs-3">Task List</span>
+        <ul class="list-group">
+            <li th:each="task: ${taskList}" class="list-group-item">
+                <a th:href="${'/tasks/'+task.getId()}" th:text="${task.getName()}"></a>
+            </li>
+        </ul>
+    </div>
+    </div>
+</div>
+</body>
+</html>

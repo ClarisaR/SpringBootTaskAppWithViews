@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <th:block th:replace="blocks/bootstrap_headers :: bootstrap_headers"></th:block>
+    <title>Task Created Successfully</title>
+</head>
+<body>
+<div class="container mt-5 ">
+    <h1 class="text-center">Task created successfully!</h1>
+    <div class="bg-light shadow rounded pb-5 pt-4 px-3">
+        <ul class="list-group">
+            <li class="list-group-item" th:text="${task.name}"></li>
+            <li class="list-group-item" th:text="${task.description}"></li>
+            <li class="list-group-item" th:text="${task.status}"></li>
+            <li class="list-group-item" th:text="${task.date.toLocaleString()}"></li>
+        </ul>
+        <a class="btn btn-primary mt-3" href="/tasks">Go Home</a>
+    </div>
+</div>
+</body>
+</html>

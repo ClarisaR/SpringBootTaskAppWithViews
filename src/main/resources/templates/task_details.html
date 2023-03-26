@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <th:block th:replace="blocks/bootstrap_headers :: bootstrap_headers"></th:block>
+    <title>Task Details</title>
+</head>
+<body>
+<div class="container mt-2 mb-4">
+    <h1 class="text-center fs-2">Task Details</h1>
+  <div class="bg-light shadow rounded pt-3 pb-4 px-5">
+    <form th:object="${task}" method="post" th:action="${'/tasks/'+task.id}">
+        <div class="mb-3">
+            <label for="id" class="form-label">ID</label>
+            <input type="text" class="form-control" id="id" th:value="${task.id}" disabled/>
+        </div>
+
+        <div class="mb-3">
+            <label for="date" class="form-label">Created at</label>
+            <input type="text" class="form-control" id="date" th:value="${task.date}" disabled/>
+        </div>
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" th:value="${task.name}" th:field="*{name}"/>
+            <span th:each="err: ${#fields.errors('description')}" th:text="${err}"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <input type="text" class="form-control" id="description" th:value="${task.description}"
+                   th:field="*{description}"/>
+            <small th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></small>
+        </div>
+        <div>
+          <label class="d-block">Status</label>
+        <div class="btn-group mb-3">
+                <input class="btn-check" type="radio" name="todo" id="radio_todo"
+                       th:checked="${task.status.toString().equals('TODO')}" th:value="TODO" th:field="*{status}"/>
+                <label class="btn btn-outline-primary" for="radio_todo">
+                    TODO
+                </label>
+
+                <input class="btn-check" type="radio" name="doing" id="radio_doing"
+                       th:checked="${task.status.toString().equals('DOING')}" th:value="DOING" th:field="*{status}"/>
+                <label class="btn btn-outline-primary" for="radio_doing">
+                    DOING
+                </label>
+
+                <input class="btn-check" type="radio" name="done" id="radio_done"
+                       th:checked="${task.status.toString().equals('DONE')}" th:value="DONE" th:field="*{status}"/>
+                <label class="btn btn-outline-primary" for="radio_done">
+                    DONE
+                </label>
+            <span th:errors="*{status}"></span>
+        </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Update Task</button>
+    </form>
+      <div class="d-flex flex-row justify-content-around mt-2 n " >
+      <button id="boton_eliminar" class="btn btn-danger" th:data-task-id="${task.id}">Delete Task</button>
+      <a href="/tasks" type="button" class="btn btn-secondary">Go Home</a>
+      </div>
+  </div>
+</div>
+<script>
+    const boton_eliminar = document.getElementById("boton_eliminar");
+    const radio_todo = document.getElementById("radio_todo");
+    const radio_doing = document.getElementById("radio_doing");
+    const radio_done = document.getElementById("radio_done");
+
+    radio_todo.addEventListener("click", function () {
+        radio_doing.checked = false;
+        radio_done.checked = false;
+    })
+    radio_doing.addEventListener("click", function () {
+        radio_todo.checked = false;
+        radio_done.checked = false;
+    })
+    radio_done.addEventListener("click", function () {
+        radio_doing.checked = false;
+        radio_todo.checked = false;
+    })
+    boton_eliminar.addEventListener("click", function () {
+        const taskId = boton_eliminar.dataset.taskId
+        const url = `/tasks/${taskId}`
+        const metodo = "DELETE"
+        fetch(url,
+            {
+                method: metodo,
+            }
+        ).then(response => response.text())
+            .then(data => {
+                document.documentElement.innerHTML = data
+            })
+    })
+</script>
+</body>
+</html>
